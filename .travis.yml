@@ -1,0 +1,16 @@
+language: python
+sudo: false
+python:
+  - "2.7"
+install:
+  - make testenv
+script:
+  - make test
+cache:
+    directories:
+        - $HOME/.cache/pip
+env:
+  - DJANGO_SPEC="Django>=1.6,<1.7"
+  - DJANGO_SPEC="Django>=1.7,<1.8"
+  - DJANGO_SPEC="Django>=1.8,<1.9"
+  - DJANGO_SPEC="Django>=1.9,<2.0"
