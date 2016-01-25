@@ -8,6 +8,15 @@ A celery task class whose execution is delayed until after the request
 finishes, using request_started and request_finished signals from django and
 thread locals.
 
+This is useful if your views are wrapped in transactions (as they should if
+you're making database modifications in them), as you can end up triggering a
+celery task too soon before the transaction has been committed (or even trigger
+a task when the corresponding transaction has been rolled back).
+
+By listening to the request_started and request_finished django signals, we can
+safely trigger a task after all transactions created from @atomic or
+ATOMIC_REQUESTS have been committed.
+
 Usage
 -----
 
