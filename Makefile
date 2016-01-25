@@ -9,7 +9,7 @@ flake8:
 	flake8 post_request_task
 
 runtests:
-	./runtests.py
+	coverage run --branch --source=post_request_task ./runtests.py
 
 coveragereport:
 	coverage report --omit=post_request_task/test*
