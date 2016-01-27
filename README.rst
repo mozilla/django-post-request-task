@@ -20,7 +20,7 @@ can safely trigger a task after all transactions created from `@atomic` or
 Usage
 -----
 
-.. code-block::
+.. code-block:: python
 
     from celery import Celery
     from post_request_task.task import PostRequestTask
@@ -37,7 +37,7 @@ Usage
 
 Or, if you are using the task decorator directly:
 
-.. code-block::
+.. code-block:: python
 
     from post_request_task.task import task
 
@@ -53,7 +53,7 @@ cycle, then it will be triggered normally.
 Running tests
 -------------
 
-.. code-block::
+.. code-block:: sh
 
     $ make testenv
     $ make test
@@ -61,7 +61,7 @@ Running tests
 Tests are run with Django 1.8.x by default. If you want to override this, use:
 
 
-.. code-block::
+.. code-block:: sh
 
     $ DJANGO="Django==1.9" make testenv
     $ make test
