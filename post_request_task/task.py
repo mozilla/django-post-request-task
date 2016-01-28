@@ -77,6 +77,7 @@ def _append_task(t):
         queue.append(t)
     else:
         log.debug('Did not append duplicate task to the queue: %s.', t)
+    return None
 
 
 class PostRequestTask(Task):
@@ -96,9 +97,11 @@ class PostRequestTask(Task):
 
     def apply_async(self, args=None, kwargs=None, **extrakw):
         if is_task_queuing_enabled_for_this_thread():
-            _append_task((self, args, kwargs, extrakw))
+            result = _append_task((self, args, kwargs, extrakw))
         else:
-            self.original_apply_async(args=args, kwargs=kwargs, **extrakw)
+            result = self.original_apply_async(
+                args=args, kwargs=kwargs, **extrakw)
+        return result
 
 
 # Replacement `@task` decorator.
