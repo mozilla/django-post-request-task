@@ -8,7 +8,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
 
 setup(
     name='django-post-request-task',
-    version='0.0.1',
+    version='0.0.2',
     description='A celery task class whose execution is delayed until after '
                 'the request finishes',
     author='Mathieu Pillard',
