@@ -18,6 +18,11 @@ django.setup()
 
 from django.test.runner import DiscoverRunner
 
-failures = DiscoverRunner(verbosity=1).run_tests(['post_request_task'])
+if len(sys.argv) > 1:
+    target = sys.argv[1:]
+else:
+    target = ['post_request_task']
+
+failures = DiscoverRunner(verbosity=1).run_tests(target)
 if failures:
     sys.exit(failures)

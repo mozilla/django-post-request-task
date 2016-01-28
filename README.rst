@@ -4,7 +4,7 @@ django-post-request-task
 .. image:: https://travis-ci.org/mozilla/django-post-request-task.svg?branch=master
     :target: https://travis-ci.org/mozilla/django-post-request-task
 
-A celery task class whose execution is delayed until after the request
+A celery 3.x task class whose execution is delayed until after the request
 finishes, using `request_started` and `request_finished` signals from django
 and thread locals.
 
@@ -48,6 +48,9 @@ Or, if you are using the task decorator directly:
 
 That's it. If the task is called from outside the django request-response
 cycle, then it will be triggered normally.
+
+As a bonus feature, if the same task is called with the same argument several
+times during a request-response cycle, it will only be queued up once.
 
 
 Running tests

@@ -1,9 +1,10 @@
 DJANGO ?= "Django>=1.8,<1.9"
+CELERY ?= "celery>=3.0,<4.0"
 
 testenv:
 	pip install -e .
 	pip install --upgrade pip wheel
-	pip install celery coverage $(DJANGO) flake8 mock 
+	pip install $(DJANGO) $(CELERY) coverage flake8 mock
 
 flake8:
 	flake8 post_request_task
