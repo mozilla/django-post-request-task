@@ -13,11 +13,13 @@ log = logging.getLogger('post_request_task')
 
 
 _locals = threading.local()
+_locals.task_queue = []
+_locals.queue_tasks = False
 
 
 def _get_task_queue():
     """Returns the calling thread's task queue."""
-    return _locals.__dict__.setdefault('task_queue', [])
+    return _locals.task_queue
 
 
 def _start_queuing_tasks(**kwargs):
@@ -29,48 +31,52 @@ def _start_queuing_tasks(**kwargs):
     If not called, tasks are delayed normally (so tasks still function without
     having to call _send_tasks_and_stop_queuing() manually when we're outside
     the request-response cycle.."""
-    _locals.__dict__['queue_tasks'] = True
+    _locals.queue_tasks = True
 
 
 def _stop_queuing_tasks(**kwargs):
     """Stops queuing tasks for this thread.
 
     Not supposed to be called directly, only useful for tests cleanup."""
-    _locals.__dict__.pop('queue_tasks', None)
+    _locals.queue_tasks = False
 
 
 def is_task_queuing_enabled_for_this_thread():
     """Returns whether post request task queuing is enabled for this thread."""
-    return _locals.__dict__.get('queue_tasks', False)
+    return _locals.queue_tasks
 
 
 def _send_tasks_and_stop_queuing(**kwargs):
     """Sends all delayed Celery tasks and stop queuing new ones for now."""
-    _locals.__dict__.pop('queue_tasks', None)
+    log.info('Stopping queueing tasks and sending already queued ones.')
+    _stop_queuing_tasks()
     queue = _get_task_queue()
     while queue:
-        cls, args, kwargs = queue.pop(0)
-        cls.original_apply_async(*args, **kwargs)
+        task, args, kwargs, extrakw = queue.pop(0)
+        task.original_apply_async(args=args, kwargs=kwargs, **extrakw)
 
 
 def _discard_tasks(**kwargs):
     """Discards all delayed Celery tasks."""
-    _get_task_queue()[:] = []
+    log.info('Discarding %d queued tasks.', len(_locals.task_queue))
+    _locals.task_queue = []
 
 
 def _append_task(t):
     """Append a task to the queue.
 
-    Expected argument is a tuple of the (task class, args, kwargs).
+    Expected argument is a tuple of the following form:
+    (task class, args, kwargs, extra kwargs).
 
     This doesn't append to queue if the argument is already in the queue.
 
     """
-    queue = _get_task_queue()
+    queue = _locals.task_queue
     if t not in queue:
+        log.debug('Appended new task to the queue: %s.', t)
         queue.append(t)
     else:
-        log.debug('Removed duplicate task: %s' % (t,))
+        log.debug('Did not append duplicate task to the queue: %s.', t)
 
 
 class PostRequestTask(Task):
@@ -84,14 +90,15 @@ class PostRequestTask(Task):
     """
     abstract = True
 
-    def original_apply_async(self, *args, **kwargs):
-        return super(PostRequestTask, self).apply_async(*args, **kwargs)
+    def original_apply_async(self, args=None, kwargs=None, **extrakw):
+        return super(PostRequestTask, self).apply_async(
+            args=args, kwargs=kwargs, **extrakw)
 
-    def apply_async(self, *args, **kwargs):
+    def apply_async(self, args=None, kwargs=None, **extrakw):
         if is_task_queuing_enabled_for_this_thread():
-            _append_task((self, args, kwargs))
+            _append_task((self, args, kwargs, extrakw))
         else:
-            self.original_apply_async(*args, **kwargs)
+            self.original_apply_async(args=args, kwargs=kwargs, **extrakw)
 
 
 # Replacement `@task` decorator.
@@ -100,14 +107,15 @@ task = partial(base_task, base=PostRequestTask)
 
 # Hook the signal handlers up.
 # Start queuing the tasks only if we're inside a request-response cycle thread.
-request_started.connect(_start_queuing_tasks,
-                        dispatch_uid='request_started_tasks')
+request_started.connect(
+    _start_queuing_tasks, dispatch_uid='{}.request_started'.format(__name__))
 
 # Send the tasks to celery and stop queuing when the request is finished.
-request_finished.connect(_send_tasks_and_stop_queuing,
-                         dispatch_uid='request_finished_tasks')
+request_finished.connect(
+    _send_tasks_and_stop_queuing,
+    dispatch_uid='{}.request_finished'.format(__name__))
 
 # And make sure to discard the task queue when we have an exception in the
 # request-response cycle.
-got_request_exception.connect(_discard_tasks,
-                              dispatch_uid='request_exception_tasks')
+got_request_exception.connect(
+    _discard_tasks, dispatch_uid='{}.got_request_exception'.format(__name__))
