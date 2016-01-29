@@ -75,7 +75,8 @@ class TestTask(TestCase):
                                                   _get_task_queue()))
 
     def test_task_should_be_called_immediately(self):
-        test_task.delay()
+        result = test_task.delay()
+        self.assertTrue(result)
         self.assertEqual(task_mock.call_count, 1)
 
     def test_task_with_args_and_kwargs(self):
@@ -86,7 +87,8 @@ class TestTask(TestCase):
 
     def test_task_in_request_should_not_be_called_immediately(self):
         request_started.send(sender=self)
-        test_task.delay()
+        result = test_task.delay()
+        self.assertEqual(result, None)
         self.assertEqual(task_mock.call_count, 0)
 
     def test_task_in_request_with_args_and_kwargs(self):
