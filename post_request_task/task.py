@@ -13,13 +13,11 @@ log = logging.getLogger('post_request_task')
 
 
 _locals = threading.local()
-_locals.task_queue = []
-_locals.queue_tasks = False
 
 
 def _get_task_queue():
     """Returns the calling thread's task queue."""
-    return _locals.task_queue
+    return _locals.__dict__.setdefault('task_queue', [])
 
 
 def _start_queuing_tasks(**kwargs):
@@ -31,35 +29,36 @@ def _start_queuing_tasks(**kwargs):
     If not called, tasks are delayed normally (so tasks still function without
     having to call _send_tasks_and_stop_queuing() manually when we're outside
     the request-response cycle.."""
-    _locals.queue_tasks = True
+    _locals.__dict__['task_queue_enabled'] = True
 
 
 def _stop_queuing_tasks(**kwargs):
     """Stops queuing tasks for this thread.
 
     Not supposed to be called directly, only useful for tests cleanup."""
-    _locals.queue_tasks = False
+    _locals.__dict__['task_queue_enabled'] = False
 
 
 def is_task_queuing_enabled_for_this_thread():
     """Returns whether post request task queuing is enabled for this thread."""
-    return _locals.queue_tasks
+    return _locals.__dict__.get('task_queue_enabled', False)
 
 
 def _send_tasks_and_stop_queuing(**kwargs):
     """Sends all delayed Celery tasks and stop queuing new ones for now."""
     log.info('Stopping queueing tasks and sending already queued ones.')
     _stop_queuing_tasks()
-    queue = _get_task_queue()
-    while queue:
-        task, args, kwargs, extrakw = queue.pop(0)
+    task_queue = _get_task_queue()
+    while task_queue:
+        task, args, kwargs, extrakw = task_queue.pop(0)
         task.original_apply_async(args=args, kwargs=kwargs, **extrakw)
 
 
 def _discard_tasks(**kwargs):
     """Discards all delayed Celery tasks."""
-    log.info('Discarding %d queued tasks.', len(_locals.task_queue))
-    _locals.task_queue = []
+    task_queue = _get_task_queue()
+    log.info('Discarding %d queued tasks.', len(task_queue))
+    task_queue[:] = []
 
 
 def _append_task(t):
@@ -71,10 +70,10 @@ def _append_task(t):
     This doesn't append to queue if the argument is already in the queue.
 
     """
-    queue = _locals.task_queue
-    if t not in queue:
+    task_queue = _get_task_queue()
+    if t not in task_queue:
         log.debug('Appended new task to the queue: %s.', t)
-        queue.append(t)
+        task_queue.append(t)
     else:
         log.debug('Did not append duplicate task to the queue: %s.', t)
     return None

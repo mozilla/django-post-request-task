@@ -5,7 +5,8 @@ from django.test import TestCase
 from celery import current_app
 from mock import Mock, patch
 from post_request_task.task import (task, _get_task_queue, _discard_tasks,
-                                    _stop_queuing_tasks)
+                                    _start_queuing_tasks, _stop_queuing_tasks,
+                                    is_task_queuing_enabled_for_this_thread)
 
 
 current_app.conf.CELERY_ALWAYS_EAGER = True
@@ -73,6 +74,13 @@ class TestTask(TestCase):
         assert len(_get_task_queue()) == 0, (
             'Expected empty queue, got %s: %s' % (len(_get_task_queue()),
                                                   _get_task_queue()))
+
+    def test_task_queue_is_enabled(self):
+        self.assertEqual(is_task_queuing_enabled_for_this_thread(), False)
+        _start_queuing_tasks()
+        self.assertEqual(is_task_queuing_enabled_for_this_thread(), True)
+        _stop_queuing_tasks()
+        self.assertEqual(is_task_queuing_enabled_for_this_thread(), False)
 
     def test_task_should_be_called_immediately(self):
         result = test_task.delay()
