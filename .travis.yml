@@ -1,16 +1,25 @@
-language: python
 sudo: false
+
+language: python
+
 python:
-  - "2.7"
-install:
-  - make testenv
-script:
-  - make test
+  - '2.7'
+  - '3.4'
+  - '3.5'
+  - pypy
+
 cache:
     directories:
         - $HOME/.cache/pip
+
 env:
-  - DJANGO_SPEC="Django>=1.6,<1.7"
-  - DJANGO_SPEC="Django>=1.7,<1.8"
-  - DJANGO_SPEC="Django>=1.8,<1.9"
-  - DJANGO_SPEC="Django>=1.9,<2.0"
+  - DJANGO_VERSION=1.10.x
+  - DJANGO_VERSION=1.9.x
+  - DJANGO_VERSION=1.8.x
+
+
+install:
+  - pip install tox
+
+script:
+  - tox -e "$TRAVIS_PYTHON_VERSION-$DJANGO_VERSION"
