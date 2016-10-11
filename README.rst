@@ -61,10 +61,11 @@ Running tests
     $ make testenv
     $ make test
 
-Tests are run with Django 1.8.x by default. If you want to override this, use:
+Tests are run with Django 1.8.x by default. If you want to run tests for other versions
+use tox:
 
 
 .. code-block:: sh
 
-    $ DJANGO="Django==1.9" make testenv
-    $ make test
+    $ make testenv
+    $ tox -e 2.7-1.9.x # or any other environment defined in our tox.ini

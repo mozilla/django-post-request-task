@@ -1,10 +1,7 @@
-DJANGO ?= "Django>=1.8,<1.9"
-CELERY ?= "celery>=3.0,<4.0"
-
 testenv:
+	pip install --upgrade pip wheel tox
 	pip install -e .
-	pip install --upgrade pip wheel
-	pip install $(DJANGO) $(CELERY) coverage flake8 mock
+	pip install -e .[tests]
 
 flake8:
 	flake8 post_request_task
