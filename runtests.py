@@ -13,8 +13,10 @@ settings.configure(
     },
     INSTALLED_APPS=()
 )
-django.setup()
 
+# Only django versions from 1.7 on have setup
+if hasattr(django, 'setup'):
+    django.setup()
 
 from django.test.runner import DiscoverRunner
 

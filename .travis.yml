@@ -16,10 +16,12 @@ env:
   - DJANGO_VERSION=1.10.x
   - DJANGO_VERSION=1.9.x
   - DJANGO_VERSION=1.8.x
+  - DJANGO_VERSION=1.7.x
+  - DJANGO_VERSION=1.6.x
 
 
 install:
   - pip install tox
 
 script:
-  - tox -e "$TRAVIS_PYTHON_VERSION-$DJANGO_VERSION"
+  - ./travis_test_runner.sh
