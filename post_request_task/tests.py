@@ -51,10 +51,9 @@ class TestTask(TestCase):
             'Expected %d task in the queue, found %d.' % (expected_size, size))
         for i, item in enumerate(queue):
             cls, args, kwargs, extrakw = item
-            self.assertEqual(
-                cls.name,
-                '%s.%s' % (test_task.__module__, test_task.__name__),
-                'Expected the test task, found %s.' % cls.name)
+            self.assertTrue(
+                isinstance(cls, test_task.__class__),
+                'Expected the test_task, found %s.' % cls.name)
             self.assertEqual(
                 args,
                 expected_args[i],
