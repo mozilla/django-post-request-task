@@ -5,7 +5,7 @@ django-post-request-task
     :target: https://travis-ci.org/mozilla/django-post-request-task
 
 A celery 3.x task class whose execution is delayed until after the request
-finishes, using `request_started` and `request_finished` signals from django
+finishes, using ``request_started`` and ``request_finished`` signals from django
 and thread locals.
 
 This is useful if your views are wrapped in transactions (as they should if
@@ -14,8 +14,8 @@ celery task too soon before the transaction has been committed (or even trigger
 a task when the corresponding transaction has been rolled back).
 
 By listening to the `request_started` and `request_finished` django signals, we
-can safely trigger a task after all transactions created from `@atomic` or
-`ATOMIC_REQUESTS` have been committed.
+can safely trigger a task after all transactions created from ``@atomic`` or
+``ATOMIC_REQUESTS`` have been committed.
 
 Usage
 -----
@@ -61,11 +61,11 @@ Running tests
     $ make testenv
     $ make test
 
-Tests are run with Django 1.8.x by default. If you want to run tests for other versions
+By default, tests are run with whatever django version is installed. If you want to run tests for other versions
 use tox:
 
 
 .. code-block:: sh
 
     $ make testenv
-    $ tox -e 2.7-1.9.x # or any other environment defined in our tox.ini
+    $ tox -e 2.7-1.11.x # or any other environment defined in our tox.ini
