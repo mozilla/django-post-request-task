@@ -22,7 +22,7 @@ def read(*parts):
 
 
 install_requires = [
-    'Django>=1.6,<2.1',
+    'Django>=1.11,<3',
     'celery>=3.0,<5.0',
 ]
 
