@@ -18,8 +18,6 @@ matrix:
   exclude:
     - python: 2.7
       env: DJANGO_VERSION=2.0.x
-    - python: pypy
-      env: DJANGO_VERSION=2.0.x
     - python: 2.7
       env: DJANGO_VERSION=2.1.x
 
