@@ -6,7 +6,6 @@ python:
   - 2.7
   - 3.6
   - 3.7
-  - pypy
 
 cache: pip
 
@@ -22,8 +21,6 @@ matrix:
     - python: pypy
       env: DJANGO_VERSION=2.0.x
     - python: 2.7
-      env: DJANGO_VERSION=2.1.x
-    - python: pypy
       env: DJANGO_VERSION=2.1.x
 
 install:
