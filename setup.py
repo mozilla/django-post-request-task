@@ -22,7 +22,7 @@ def read(*parts):
 
 
 install_requires = [
-    'Django>=1.6,<2.1',
+    'Django>=1.11,<=2.1',
     'celery>=3.0,<5.0',
 ]
 
@@ -66,8 +66,8 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Programming Language :: Python :: Implementation :: CPython',
         'Topic :: Software Development :: Libraries :: Python Modules',
