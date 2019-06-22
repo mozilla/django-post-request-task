@@ -1,34 +1,28 @@
-sudo: false
+dist: xenial
 
 language: python
 
 python:
-  - '2.7'
-  - '3.4'
-  - '3.5'
-  - '3.6'
-  - pypy
+  - 2.7
+  - 3.6
+  - 3.7
 
-cache:
-    directories:
-        - $HOME/.cache/pip
+cache: pip
 
 env:
   - DJANGO_VERSION=2.0.x
+  - DJANGO_VERSION=2.1.x
+  - DJANGO_VERSION=2.2.x
   - DJANGO_VERSION=1.11.x
-  - DJANGO_VERSION=1.8.x
-
 
 matrix:
   exclude:
-    - python: '3.6'
-      env: DJANGO_VERSION=1.8.x
-    - python: '2.7'
+    - python: 2.7
       env: DJANGO_VERSION=2.0.x
-    - python: '3.4'
-      env: DJANGO_VERSION=2.0.x
-    - python: 'pypy'
-      env: DJANGO_VERSION=2.0.x
+    - python: 2.7
+      env: DJANGO_VERSION=2.1.x
+    - python: 2.7
+      env: DJANGO_VERSION=2.2.x
 
 install:
   - pip install tox
