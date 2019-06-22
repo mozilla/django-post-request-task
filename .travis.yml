@@ -12,6 +12,7 @@ cache: pip
 env:
   - DJANGO_VERSION=2.0.x
   - DJANGO_VERSION=2.1.x
+  - DJANGO_VERSION=2.2.x
   - DJANGO_VERSION=1.11.x
 
 matrix:
@@ -20,6 +21,8 @@ matrix:
       env: DJANGO_VERSION=2.0.x
     - python: 2.7
       env: DJANGO_VERSION=2.1.x
+    - python: 2.7
+      env: DJANGO_VERSION=2.2.x
 
 install:
   - pip install tox
