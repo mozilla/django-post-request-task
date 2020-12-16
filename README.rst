@@ -4,7 +4,7 @@ django-post-request-task
 .. image:: https://travis-ci.org/mozilla/django-post-request-task.svg?branch=master
     :target: https://travis-ci.org/mozilla/django-post-request-task
 
-A celery 3.x task class whose execution is delayed until after the request
+A celery task class whose execution is delayed until after the request
 finishes, using ``request_started`` and ``request_finished`` signals from django
 and thread locals.
 
@@ -68,4 +68,4 @@ use tox:
 .. code-block:: sh
 
     $ make testenv
-    $ tox -e 2.7-1.11.x # or any other environment defined in our tox.ini
+    $ tox -e 3.7-2.0.x # or any other environment defined in our tox.ini
