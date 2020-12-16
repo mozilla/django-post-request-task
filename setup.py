@@ -22,17 +22,9 @@ def read(*parts):
 
 
 install_requires = [
-    'Django>=1.11',
+    'Django>=2.2',
     'celery>=3.0,<5.0',
 ]
-
-
-test_requires = [
-    'coverage',
-    'flake8',
-    'mock',
-]
-
 
 setup(
     name='django-post-request-task',
@@ -48,9 +40,6 @@ setup(
     long_description=read('README.rst'),
     packages=['post_request_task'],
     install_requires=install_requires,
-    extras_require={
-        'tests': test_requires,
-    },
     include_package_data=True,
     zip_safe=False,
     classifiers=[

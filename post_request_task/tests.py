@@ -3,7 +3,7 @@ from django.core.signals import (got_request_exception, request_finished,
 from django.test import TestCase
 
 from celery import current_app
-from mock import Mock, patch
+from unittest.mock import Mock, patch
 from post_request_task.task import (task, _get_task_queue, _discard_tasks,
                                     _start_queuing_tasks, _stop_queuing_tasks,
                                     is_task_queuing_enabled_for_this_thread)
