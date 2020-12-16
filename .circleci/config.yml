@@ -1,0 +1,24 @@
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: circleci/python:latest
+    working_directory: ~/repo
+    parameters:
+      python:
+        type: string
+      django:
+        type: string
+    steps:
+      - checkout
+      - run: tox -e "py<< parameters.python >>-django<< parameters.django >>"
+
+workflows:
+  default-workflow:
+    jobs:
+      - test:
+          matrix:
+            parameters:
+              python: [36, 37, 38, 39]
+              django: [22, 30, 31]
