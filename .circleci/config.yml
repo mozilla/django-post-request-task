@@ -12,6 +12,7 @@ jobs:
         type: string
     steps:
       - checkout
+      - run: pip install tox
       - run: tox -e "py<< parameters.python >>-django<< parameters.django >>"
 
 workflows:
