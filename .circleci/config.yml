@@ -4,7 +4,7 @@ jobs:
   test:
     docker:
       - image: circleci/python:<< parameters.python >>
-    working_directory: ~/repo
+    working_directory: ~/django-post-request-task
     parameters:
       python:
         type: string
@@ -13,7 +13,9 @@ jobs:
     steps:
       - checkout
       - run: pip install tox
-      - run: tox -e "py$(echo '<< parameters.python >>' | tr -d '.')-django<< parameters.django >>"
+      - run:
+          name: tox python=<< parameters.python >> django=<< parameters.django >>
+          command: tox -e "py$(echo '<< parameters.python >>' | tr -d '.')-django<< parameters.django >>"
 
 workflows:
   default-workflow:
