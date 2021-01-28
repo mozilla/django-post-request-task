@@ -5,7 +5,7 @@ from functools import partial
 from django.core.signals import (got_request_exception, request_finished,
                                  request_started)
 
-from celery import task as base_task
+from celery import shared_task as base_task
 from celery import Task
 
 
