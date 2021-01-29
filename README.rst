@@ -32,13 +32,13 @@ Usage
         pass
 
 
-Or, if you are using the task decorator directly:
+Or, if you are using the decorator directly:
 
 .. code-block:: python
 
-    from post_request_task.task import task
+    from post_request_task.task import shared_task
 
-    @task
+    @shared_task
     def my_task():
         pass
 

@@ -4,8 +4,9 @@ from django.test import TestCase
 
 from celery import current_app
 from unittest.mock import Mock, patch
-from post_request_task.task import (task, _get_task_queue, _discard_tasks,
-                                    _start_queuing_tasks, _stop_queuing_tasks,
+from post_request_task.task import (shared_task, _get_task_queue,
+                                    _discard_tasks, _start_queuing_tasks,
+                                    _stop_queuing_tasks,
                                     is_task_queuing_enabled_for_this_thread)
 
 
@@ -15,12 +16,12 @@ current_app.conf.CELERY_ALWAYS_EAGER = True
 task_mock = Mock()
 
 
-@task
+@shared_task
 def test_task():
     task_mock()
 
 
-@task
+@shared_task
 def test_task_with_args_and_kwargs(foo, bar=None):
     task_mock(foo, bar=bar)
 
