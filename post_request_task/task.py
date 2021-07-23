@@ -5,7 +5,7 @@ from functools import partial
 from django.core.signals import (got_request_exception, request_finished,
                                  request_started)
 
-from celery import task as base_task
+from celery import shared_task as base_task
 from celery import Task
 
 
@@ -82,11 +82,12 @@ def _append_task(t):
 class PostRequestTask(Task):
     """A task whose execution is delayed until after the request finishes.
 
-    This simply wraps celery's `@task` decorator and stores the task calls
-    until after the request is finished, then fires them off.
+    This simply wraps celery's `@app.task` and `@shared_task` decorators and
+    stores the task calls until after the request is finished, then fires them
+    off.
 
     If no request was started in this thread, behaves exactly like the original
-    @task decorator, sending tasks to celery directly.
+    decorator, sending tasks to celery directly.
     """
     abstract = True
 
@@ -103,8 +104,8 @@ class PostRequestTask(Task):
         return result
 
 
-# Replacement `@task` decorator.
-task = partial(base_task, base=PostRequestTask)
+# Replacement `@shared_task` decorator.
+shared_task = partial(base_task, base=PostRequestTask)
 
 
 # Hook the signal handlers up.
