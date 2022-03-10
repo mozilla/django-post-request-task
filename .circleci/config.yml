@@ -24,4 +24,4 @@ workflows:
           matrix:
             parameters:
               python: ["3.8", "3.9", "3.10"]
-              django: ["3", "4"]
+              django: ["32", "40"]
