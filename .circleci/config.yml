@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: circleci/python:<< parameters.python >>
+      - image: cimg/python:<< parameters.python >>
     working_directory: ~/django-post-request-task
     parameters:
       python:
@@ -23,5 +23,5 @@ workflows:
       - test:
           matrix:
             parameters:
-              python: ["3.6", "3.7", "3.8", "3.9"]
-              django: ["22", "30", "31"]
+              python: ["3.8", "3.9", "3.10"]
+              django: ["3", "4"]
