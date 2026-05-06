@@ -1,9 +1,6 @@
 django-post-request-task
 ========================
 
-.. image:: https://circleci.com/gh/mozilla/django-post-request-task.svg?style=svg
-    :target: https://circleci.com/gh/mozilla/django-post-request-task
-
 A celery task class whose execution is delayed until after the request
 finishes, using ``request_started`` and ``request_finished`` signals from django
 and thread locals.
@@ -16,6 +13,10 @@ a task when the corresponding transaction has been rolled back).
 By listening to the `request_started` and `request_finished` django signals, we
 can safely trigger a task after all transactions created from ``@atomic`` or
 ``ATOMIC_REQUESTS`` have been committed.
+
+Deprecated
+----------
+This package is **deprecated and no longer maintained**. Use django's ``transaction.on_commit()`` instead.
 
 Usage
 -----
